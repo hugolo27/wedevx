@@ -43,7 +43,9 @@ const AlmaText = styled.div`
   font-weight: 900;
   text-transform: lowercase;
   color: #000;
-  margin-bottom: 32px;
+  margin-bottom: 85px;
+  display: flex;
+  align-items: center;
 
   @media (max-width: 1024px) {
     font-size: 20px;
@@ -52,6 +54,12 @@ const AlmaText = styled.div`
     font-size: 14px;
     margin-bottom: 16px;
   }
+`;
+
+const Logo = styled.img`
+  height: 40px;
+  width: auto;
+  object-fit: contain;
 `;
 
 const BannerText = styled.div`
@@ -208,16 +216,22 @@ const Field = styled.div`
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
+  box-sizing: border-box;
 `;
 
 const Input = styled.input`
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d1d1;
   border-radius: 6px;
   font-size: 16px;
   width: 100%;
   transition: border-color 0.2s;
   font-family: inherit;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #d1d1d1;
+  }
 
   &:focus {
     outline: none;
@@ -233,7 +247,7 @@ const Input = styled.input`
 
 const Select = styled.select`
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d1d1;
   border-radius: 6px;
   font-size: 16px;
   width: 100%;
@@ -241,17 +255,29 @@ const Select = styled.select`
   background-color: white;
   transition: border-color 0.2s;
   font-family: inherit;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+  cursor: pointer;
 
   &:focus {
     outline: none;
     border-color: #000;
     box-shadow: none;
   }
+
+  option {
+    padding: 8px;
+    font-size: 16px;
+  }
 `;
 
 const TextArea = styled.textarea`
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d1d1;
   border-radius: 6px;
   min-height: 180px;
   font-size: 16px;
@@ -260,6 +286,11 @@ const TextArea = styled.textarea`
   resize: vertical;
   transition: border-color 0.2s;
   font-family: inherit;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #d1d1d1;
+  }
 
   &:focus {
     outline: none;
@@ -353,16 +384,45 @@ const Checkbox = styled.input`
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: black;
+  accent-color: #d1d1d1;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  position: relative;
+
+  &:checked {
+    background-color: #d1d1d1;
+    border-color: #d1d1d1;
+  }
+
+  &:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
 `;
 
 const FileInput = styled.input`
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d1d1;
   border-radius: 6px;
   width: 100%;
   font-size: 16px;
   font-family: inherit;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #d1d1d1;
+  }
 
   &:focus {
     outline: none;
@@ -373,7 +433,7 @@ const FileInput = styled.input`
   &::file-selector-button {
     padding: 8px 16px;
     margin-right: 16px;
-    border: none;
+    border: 1px solid #d1d1d1;
     border-radius: 4px;
     background-color: #f0f0f0;
     cursor: pointer;
@@ -565,7 +625,9 @@ export default function LeadForm() {
         <Banner>
           <BannerImg src="/banner.png" alt="Banner" />
           <BannerText>
-            <AlmaText>alma</AlmaText>
+            <AlmaText>
+              <Logo src="/alma.png" alt="Alma" />
+            </AlmaText>
             <BannerMainTextWrapper>
               Get An Assessment <br /> Of Your Immigration Case
             </BannerMainTextWrapper>
@@ -604,7 +666,9 @@ export default function LeadForm() {
       <Banner>
         <BannerImg src="/banner.png" alt="Banner" />
         <BannerText>
-          <AlmaText>alma</AlmaText>
+          <AlmaText>
+            <Logo src="/alma.png" alt="Alma" />
+          </AlmaText>
           <BannerMainTextWrapper>
             Get An Assessment <br /> Of Your Immigration Case
           </BannerMainTextWrapper>

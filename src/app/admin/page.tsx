@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { COUNTRIES } from '@/services/constants';
+import { useRouter } from 'next/navigation';
 
 const Layout = styled.div`
   display: flex;
@@ -50,6 +51,14 @@ const SidebarTitle = styled.div`
   position: relative;
   z-index: 1;
   text-align: left;
+  display: flex;
+  align-items: center;
+`;
+
+const Logo = styled.img`
+  height: 40px;
+  width: auto;
+  object-fit: contain;
 `;
 
 const SidebarNav = styled.nav`
@@ -78,11 +87,54 @@ const SidebarFooter = styled.div`
   align-items: center;
   gap: 12px;
   color: #000;
+  position: relative;
+  margin-top: auto;
+  padding-bottom: 32px;
+`;
+
+const AdminInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  padding-top: 8px;
+`;
+
+const DropdownMenu = styled.div<{ isOpen: boolean }>`
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #d1d1d1;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: ${props => props.isOpen ? 'block' : 'none'};
+  min-width: 160px;
+  margin-bottom: 8px;
+`;
+
+const DropdownItem = styled.button`
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  border: none;
+  background: none;
+  color: #222;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
 `;
 
 const VerticalDivider = styled.div`
   width: 1.5px;
-  background: #e5e7eb;
+  background: #d1d1d1;
   height: 100vh;
 `;
 
@@ -97,12 +149,14 @@ const AdminIcon = styled.div`
   font-weight: 600;
   color: #222;
   font-size: 1.25rem;
+  margin-top: 4px;
 `;
 
 const AdminText = styled.span`
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #222;
+  margin-top: 4px;
 `;
 
 const MainContent = styled.main`
@@ -145,7 +199,7 @@ const SearchInput = styled.input`
   width: 100%;
   box-sizing: border-box;
   padding: 8px 12px 8px 36px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #d1d1d1;
   border-radius: 6px;
   font-size: 14px;
   background: #fff;
@@ -155,6 +209,10 @@ const SearchInput = styled.input`
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+  }
+
+  &::placeholder {
+    color: #d1d1d1;
   }
 `;
 
@@ -170,17 +228,28 @@ const SearchIcon = styled.span`
 
 const StatusSelect = styled.select`
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #d1d1d1;
   border-radius: 6px;
   font-size: 14px;
   background-color: white;
   min-width: 120px;
   z-index: 1;
+  color: #d1d1d1;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d1d1d1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
 
   &:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+  }
+
+  option {
+    color: #222;
   }
 `;
 
@@ -191,7 +260,7 @@ const Table = styled.table`
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  border: 1.5px solid #e5e7eb;
+  border: 1px solid #d1d1d1;
 `;
 
 const TableHeader = styled.thead`
@@ -210,7 +279,7 @@ const TableRow = styled.tr`
 
 const TableCell = styled.td`
   padding: 12px 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d1d1d1;
   font-size: 14px;
   color: #374151;
 `;
@@ -220,7 +289,7 @@ const TableHeaderCell = styled.th`
   text-align: left;
   font-weight: 400;
   color: #6b7280;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #d1d1d1;
   font-size: 14px;
   cursor: pointer;
   user-select: none;
@@ -304,7 +373,7 @@ const LeadRow = styled.tr`
     background: none;
     font-family: inherit;
     white-space: nowrap;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid #d1d1d1;
     text-align: left;
   }
   &:last-child td {
@@ -325,6 +394,7 @@ type SortField = 'name' | 'submitted' | 'status' | 'country';
 type SortDirection = 'asc' | 'desc';
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -333,6 +403,7 @@ export default function AdminDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<SortField>('submitted');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const itemsPerPage = 10;
 
@@ -400,6 +471,27 @@ export default function AdminDashboard() {
     setCurrentPage(page);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    router.push('/admin/login');
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.admin-info')) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -413,15 +505,24 @@ export default function AdminDashboard() {
       <Sidebar>
         <SidebarTitleWrapper>
           <SidebarTitleSpray />
-          <SidebarTitle>alma</SidebarTitle>
+          <SidebarTitle>
+            <Logo src="/alma.png" alt="Alma" />
+          </SidebarTitle>
         </SidebarTitleWrapper>
         <SidebarNav>
           <SidebarLink href="/admin" active>Leads</SidebarLink>
           <SidebarLink href="/admin/settings">Settings</SidebarLink>
         </SidebarNav>
         <SidebarFooter>
-          <AdminIcon>A</AdminIcon>
-          <AdminText>Admin</AdminText>
+          <AdminInfo className="admin-info" onClick={toggleDropdown}>
+            <AdminIcon>A</AdminIcon>
+            <AdminText>Admin</AdminText>
+            <DropdownMenu isOpen={isDropdownOpen}>
+              <DropdownItem onClick={handleLogout}>
+                <span>Log out</span>
+              </DropdownItem>
+            </DropdownMenu>
+          </AdminInfo>
         </SidebarFooter>
       </Sidebar>
       <VerticalDivider />
@@ -522,4 +623,4 @@ export default function AdminDashboard() {
       </MainContent>
     </Layout>
   );
-} 
+}
