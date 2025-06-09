@@ -23,6 +23,7 @@ const Banner = styled.div`
   font-weight: 1000;
   text-align: left;
   margin-bottom: 20px;
+  overflow-x: hidden;
 
   @media (max-width: 1024px) {
     font-size: 44px;
@@ -35,6 +36,7 @@ const Banner = styled.div`
     font-size: 22px;
     min-height: 220px;
     height: auto;
+    overflow: hidden;
   }
 `;
 
@@ -77,7 +79,7 @@ const BannerText = styled.div`
     height: auto;
   }
   @media (max-width: 768px) {
-    padding-left: 34%;
+    padding-left: 8%;
     padding-top: 16px;
     padding-bottom: 16px;
     height: auto;
@@ -115,14 +117,15 @@ const BannerImg = styled.img`
     height: 220px;
   }
   @media (max-width: 768px) {
-    width: 100vw;
+    width: 100%;
     height: 120px;
     margin-bottom: 0;
     position: absolute;
     left: 0;
     top: 0;
     height: 100%;
-    width: auto;
+    width: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -130,16 +133,17 @@ const FormContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   margin: 0;
-  padding: 20px;
+  padding: 40px 20px;
   background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 800px;
   margin: 0 auto;
+  box-sizing: border-box;
 
   @media (max-width: 768px) {
-    padding: 10px;
+    padding: 20px 16px;
   }
 `;
 
@@ -204,6 +208,12 @@ const Form = styled.form`
   gap: 12px;
   width: 100%;
   max-width: 600px;
+  padding: 0 16px;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 0 8px;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -217,6 +227,7 @@ const Field = styled.div`
   max-width: 400px;
   margin: 0 auto;
   box-sizing: border-box;
+  padding: 0 8px;
 `;
 
 const Input = styled.input`
